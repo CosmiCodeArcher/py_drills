@@ -18,7 +18,7 @@ def password_strength(password):
             seen_digit = True
 
     # If both booleans result in True, password will always be "Strong"
-    if seen_alpha == True and seen_digit == True:
+    if seen_alpha and seen_digit:
         return "Strong"
     else:
         # When the guard clause for "Weak" password does not fire and --

@@ -8,7 +8,7 @@ def score_summary(name, a, b, c):
         return "Invalid score"
 
    #  If any score is below 0 or above 100, return Invalid score.
-    if (a < 0 or a > 100) or (b < 0 or b > 100) or (c < 0 or c > 100):
+    if  not (0 <= a <= 100) or (0 <= b <= 100) or (0 <= c <= 100):
         return "Invalid score"
 
    # Otherwise calculate the average, round it to 2 decimal places
@@ -27,4 +27,4 @@ def score_summary(name, a, b, c):
    #  return a three-line report with labels Student, Average, and Grade
     return f"Student: {name}\nAverage: {average}\nGrade: {grade}"
 
-print(score_summary("Alice", 80, 90, 85))
+print(score_summary("Alice", 80, 90, 200))

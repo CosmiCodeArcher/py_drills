@@ -39,14 +39,17 @@ def authorize(transfer):
 
     return (True, "Approved")
 
+approved = 0
+declined = 0
+
 for transfer in transfers:
     result, reason = authorize(transfer)
     
     if not result:
+        declined += 1
         print(f"{transfer['id']} Rejected: {reason}")
     else:
+        approved += 1
         print(f"{transfer['id']} {reason}")
 
-# Hand predictions:
-    #   T5 -> "International requires verified recipient"
-    #   T7 -> "Incorrect Pin"
+print(f"Approved: {approved}, Declined: {declined}")

@@ -40,7 +40,12 @@ def authorize(transfer):
     return (True, f"{transfer['id']}: Approved")
 
 for transfer in transfers:
-    authorize(transfer)
+    result, reason = authorize(transfer)
+    
+    if result == False:
+        print(f"Rejected: {reason}")
+    
+    print(f"{reason}")
 
 # Hand predictions:
     #   T5 -> "International requires verified recipient"

@@ -31,11 +31,11 @@ def authorize(transfer):
     if (transfer['daily_used'] + transfer['amount']) > 200000:
         return (False, "Daily limit exceeded")
 
-    if (not transfer['verified']) and (transfer['amount'] > 50000) and (not transfer['international']):
-        return (False, "Unverified recipient limit is 50000")
-
     if (transfer['international']) and (not transfer['verified']):
         return (False, "International requires verified recipient")
+
+    if (not transfer['verified']) and (transfer['amount'] > 50000):
+        return (False, "Unverified recipient limit is 50000")
 
     return (True, "Approved")
 

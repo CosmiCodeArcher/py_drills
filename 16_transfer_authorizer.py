@@ -17,13 +17,13 @@ transfers = [
 
 def authorize(transfer):
     if not transfer['pin_ok']:
-        return (False, "Incorrect Pin")
+        return (False, "Incorrect PIN")
 
     if transfer['locked']:
         return (False, "Account locked")
 
     if transfer['amount'] <= 0:
-        return (False, "Invalid Amount")
+        return (False, "Invalid amount")
 
     if transfer['amount'] > transfer['balance']:
         return (False, "Insufficient funds")

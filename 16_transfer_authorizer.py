@@ -1,52 +1,47 @@
+transfers = [
+    {"id": "T1", "amount": 15000,  "balance": 90000, "daily_used": 0,
+    "pin_ok": True,  "locked": False, "international": False, "verified": True},
+    {"id": "T2", "amount": 0,      "balance": 90000, "daily_used": 0,
+    "pin_ok": True,  "locked": False, "international": False, "verified": True},
+    {"id": "T3", "amount": 60000,  "balance": 90000, "daily_used": 0,
+    "pin_ok": True,  "locked": False, "international": True,  "verified": False},
+    {"id": "T4", "amount": 60000,  "balance": 90000, "daily_used": 0,
+    "pin_ok": True,  "locked": False, "international": False, "verified": False},
+    {"id": "T5", "amount": 10000,  "balance": 90000, "daily_used": 0,
+    "pin_ok": True,  "locked": False, "international": True,  "verified": False},
+    {"id": "T6", "amount": 150000, "balance": 300000, "daily_used": 80000,
+    "pin_ok": True,  "locked": False, "international": False, "verified": True},
+    {"id": "T7", "amount": 5000,   "balance": 1000,  "daily_used": 0,
+    "pin_ok": False, "locked": True,  "international": False, "verified": True},
+]
+
 def authorize(transfer):
+    if transfer['pin_ok'] == False:
+        return (False, "Incorrect Pin")
 
-    # Rule	                                                Failure message
-    # Account is locked	                                    Account locked
-    # PIN is wrong	                                        Incorrect PIN
-    # Amount is not greater than zero	                    Invalid amount
-    # International transfer to an unverified recipient	    International requires verified recipient
-    # Unverified recipient, amount over 50000	            Unverified recipient limit is 50000
-    # Amount exceeds balance	                            Insufficient funds
-    # daily_used + amount exceeds 200000	                Daily limit exceeded
+    if transfer['locked'] == True:
+        return (False, "Account locked")
 
-    # Test data:
-    transfers = [
-        {"id": "T1", "amount": 15000,  "balance": 90000, "daily_used": 0,
-        "pin_ok": True,  "locked": False, "international": False, "verified": True},
-        {"id": "T2", "amount": 0,      "balance": 90000, "daily_used": 0,
-        "pin_ok": True,  "locked": False, "international": False, "verified": True},
-        {"id": "T3", "amount": 60000,  "balance": 90000, "daily_used": 0,
-        "pin_ok": True,  "locked": False, "international": True,  "verified": False},
-        {"id": "T4", "amount": 60000,  "balance": 90000, "daily_used": 0,
-        "pin_ok": True,  "locked": False, "international": False, "verified": False},
-        {"id": "T5", "amount": 10000,  "balance": 90000, "daily_used": 0,
-        "pin_ok": True,  "locked": False, "international": True,  "verified": False},
-        {"id": "T6", "amount": 150000, "balance": 300000, "daily_used": 80000,
-        "pin_ok": True,  "locked": False, "international": False, "verified": True},
-        {"id": "T7", "amount": 5000,   "balance": 1000,  "daily_used": 0,
-        "pin_ok": False, "locked": True,  "international": False, "verified": True},
-    ]
+    if transfer['amount'] <= 0:
+        return (False, "Invalid Amount")
 
-    for transfer in transfers:
-        if transfer['pin_ok'] == False:
-            return (False, "Incorrect Pin")
+    if transfer['amount'] > transfer['balance']:
+        return (False, "Insufficient funds")
 
-        if transfer['locked'] == True:
-            return (False, "Account locked")
+    if (transfer['daily_used'] + transfer['amount']) > 200000:
+        return (False, "Daily limit exceeded")
 
-        if transfer['amount'] <= 0:
-            return (False, "Invalid Amount")
+    if (transfer['verified'] == False) and (transfer['amount'] > 50000) and (transfer['international'] == False):
+        return (False, "Unverified recipient limit is 50000")
 
-        if transfer['amount'] > transfer['balance']:
-            return (False, "Insufficient funds")
+    if (transfer['international'] == True) and (transfer['verified'] == False):
+        return (False, "International requires verified recipient")
 
-        if (transfer['daily_used'] + transfer['amount']) > 200000:
-            return (False, "Daily limit exceeded")
+    return (True, f"{transfer['id']}: Approved")
 
-        if (transfer['verified'] == False) and (transfer['amount'] > 50000) and (transfer['international'] == False):
-            return (False, "Unverified recipient limit is 50000")
+for transfer in transfers:
+    authorize(transfer)
 
-        if transfer['international'] == True and transfer['verified'] == False:
-            return (False, "International requires verified recipient")
-
-        return (True, f"{transfer['id']}: Approved")
+# Hand predictions:
+    #   T5 -> "International requires verified recipient"
+    #   T7 -> "Incorrect Pin"

@@ -16,10 +16,10 @@ transfers = [
 ]
 
 def authorize(transfer):
-    if transfer['pin_ok'] == False:
+    if not transfer['pin_ok']:
         return (False, f"{transfer['id']}: Incorrect Pin")
 
-    if transfer['locked'] == True:
+    if transfer['locked']:
         return (False, f"{transfer['id']}: Account locked")
 
     if transfer['amount'] <= 0:
@@ -31,10 +31,10 @@ def authorize(transfer):
     if (transfer['daily_used'] + transfer['amount']) > 200000:
         return (False, f"{transfer['id']}: Daily limit exceeded")
 
-    if (transfer['verified'] == False) and (transfer['amount'] > 50000) and (transfer['international'] == False):
+    if (not transfer['verified']) and (transfer['amount'] > 50000) and (not transfer['international']):
         return (False, f"{transfer['id']}: Unverified recipient limit is 50000")
 
-    if (transfer['international'] == True) and (transfer['verified'] == False):
+    if (transfer['international']) and (not transfer['verified']):
         return (False, f"{transfer['id']}: International requires verified recipient")
 
     return (True, f"{transfer['id']}: Approved")
@@ -42,7 +42,7 @@ def authorize(transfer):
 for transfer in transfers:
     result, reason = authorize(transfer)
     
-    if result == False:
+    if not result:
         print(f"Rejected: {reason}")
     else:
         print(f"{reason}")

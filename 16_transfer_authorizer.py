@@ -36,3 +36,17 @@ def authorize(transfer):
 
         if transfer['amount'] <= 0:
             return (False, "Invalid Amount")
+
+        if transfer['amount'] > transfer['balance']:
+            return (False, "Insufficient funds")
+
+        if (transfer['daily_used'] + transfer['amount']) > 200000:
+            return (False, "Daily limit exceeded")
+
+        if (transfer['verified'] == False) and (transfer['amount'] > 50000) and (transfer['international'] == False):
+            return (False, "Unverified recipient limit is 50000")
+
+        if transfer['international'] == True and transfer['verified'] == False:
+            return (False, "International requires verified recipient")
+
+        return (True, f"{transfer['id']}: Approved")

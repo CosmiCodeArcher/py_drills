@@ -44,8 +44,8 @@ for transfer in transfers:
     
     if result == False:
         print(f"Rejected: {reason}")
-    
-    print(f"{reason}")
+    else:
+        print(f"{reason}")
 
 # Hand predictions:
     #   T5 -> "International requires verified recipient"

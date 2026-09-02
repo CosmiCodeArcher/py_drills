@@ -17,35 +17,35 @@ transfers = [
 
 def authorize(transfer):
     if not transfer['pin_ok']:
-        return (False, f"{transfer['id']}: Incorrect Pin")
+        return (False, "Incorrect Pin")
 
     if transfer['locked']:
-        return (False, f"{transfer['id']}: Account locked")
+        return (False, "Account locked")
 
     if transfer['amount'] <= 0:
-        return (False, f"{transfer['id']}: Invalid Amount")
+        return (False, "Invalid Amount")
 
     if transfer['amount'] > transfer['balance']:
-        return (False, f"{transfer['id']}: Insufficient funds")
+        return (False, "Insufficient funds")
 
     if (transfer['daily_used'] + transfer['amount']) > 200000:
-        return (False, f"{transfer['id']}: Daily limit exceeded")
+        return (False, "Daily limit exceeded")
 
     if (not transfer['verified']) and (transfer['amount'] > 50000) and (not transfer['international']):
-        return (False, f"{transfer['id']}: Unverified recipient limit is 50000")
+        return (False, "Unverified recipient limit is 50000")
 
     if (transfer['international']) and (not transfer['verified']):
-        return (False, f"{transfer['id']}: International requires verified recipient")
+        return (False, "International requires verified recipient")
 
-    return (True, f"{transfer['id']}: Approved")
+    return (True, "Approved")
 
 for transfer in transfers:
     result, reason = authorize(transfer)
     
     if not result:
-        print(f"Rejected: {reason}")
+        print(f"{transfer['id']} Rejected: {reason}")
     else:
-        print(f"{reason}")
+        print(f"{transfer['id']} {reason}")
 
 # Hand predictions:
     #   T5 -> "International requires verified recipient"

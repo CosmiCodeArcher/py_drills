@@ -36,7 +36,7 @@ for idx, ticket in enumerate(queue, start=1):
 
     while True:
         attempts += 1
-        effort += attempt
+        effort += attempts
         DAILY_CAPACITY -= 1
         capacity_used += 1
         difficulty = ticket["difficulty"]

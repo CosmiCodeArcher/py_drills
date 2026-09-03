@@ -1,15 +1,3 @@
-queue = [
-    {"id": "K1", "priority": "high",   "difficulty": 2},
-    {"id": "K2", "priority": "low",    "difficulty": 5},
-    {"id": "K3", "priority": "high",   "difficulty": 1},
-    {"id": "K4", "priority": "medium", "difficulty": 4},
-    {"id": "K5", "priority": "low",    "difficulty": 3},
-    {"id": "K6", "priority": "high",   "difficulty": 6},
-]
-
-MAX_ATTEMPTS = 3
-DAILY_CAPACITY = 12
-
 # Rules.
 
 # A ticket is resolved when accumulated effort reaches its difficulty. 
@@ -24,3 +12,49 @@ DAILY_CAPACITY = 12
 
 # A ticket that hits MAX_ATTEMPTS without resolving is abandoned as failed. 
 # Capacity still gets spent on those attempts.
+
+queue = [
+    {"id": "K1", "priority": "high",   "difficulty": 2},
+    {"id": "K2", "priority": "low",    "difficulty": 5},
+    {"id": "K3", "priority": "high",   "difficulty": 1},
+    {"id": "K4", "priority": "medium", "difficulty": 4},
+    {"id": "K5", "priority": "low",    "difficulty": 3},
+    {"id": "K6", "priority": "high",   "difficulty": 6},
+]
+
+MAX_ATTEMPTS = 3
+DAILY_CAPACITY = 12
+
+resolved = 0
+abandoned = 0
+never_reached = 0
+capacity_used = 0
+
+for idx, ticket in enumerate(queue, start=1):
+    attempts = 0
+    effort = 0
+
+    while True:
+        attempts += 1
+        effort += attempt
+        DAILY_CAPACITY -= 1
+        capacity_used += 1
+        difficulty = ticket["difficulty"]
+
+        if effort == difficulty:
+            print(f"{ticket["id"]} resolved after {attempts} attempts (effort {effort} / {difficulty})")
+            resolved += 1
+
+        if attempts == MAX_ATTEMPTS:
+            print(f"abandoned after {attempts} attempts (effort {effort} / {difficulty})")
+            abandoned += 1
+            continue
+
+        if DAILY_CAPACITY == 0:
+            break
+
+    if DAILY_CAPACITY == 0:
+        never_reached = len(queue) - idx
+        break
+
+print(f"Resolved count: {resolved}, Abandoned count: {abandoned}, Tickets never reached: {never_reached}, Capacity used: {capacity_used}")

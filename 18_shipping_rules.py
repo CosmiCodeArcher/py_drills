@@ -36,3 +36,17 @@ def evaluate(parcel, rules):
             continue
 
     return (True, total, applied)
+
+for idx, parcel in enumerate(parcels, start=1):
+    accepted, total, applied = evaluate(parcel, rules)
+
+    if accepted:
+        accepted = "accepted"
+    else:
+        accepted = "rejected"
+
+    if len(applied) == 0:
+        applied = "no rules applied"
+    
+
+    print(f"{idx}. {parcel['id']} {accepted} - ₦{total} ({applied})")

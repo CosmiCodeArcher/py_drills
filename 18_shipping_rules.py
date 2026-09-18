@@ -35,6 +35,10 @@ def evaluate(parcel, rules):
         if not matched:
             continue
 
+        if rule["action"].startswith("reject:"):
+            applied.append(rule["action"])
+            return (False, 0, applied)
+
     return (True, total, applied)
 
 for idx, parcel in enumerate(parcels, start=1):
@@ -45,8 +49,13 @@ for idx, parcel in enumerate(parcels, start=1):
     else:
         accepted = "rejected"
 
-    if len(applied) == 0:
+    applied = ", ".join(applied)
+
+    if applied == "":
         applied = "no rules applied"
     
-
-    print(f"{idx}. {parcel['id']} {accepted} - ₦{total} ({applied})")
+    if applied.startswith("reject:"):
+        applied = applied.removeprefix("reject: ")
+        print(f"{idx}. {parcel['id']} {accepted} - {applied}")
+    else:
+        print(f"{idx}. {parcel['id']} {accepted} - ₦{total} ({applied})")

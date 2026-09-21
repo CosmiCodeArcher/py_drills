@@ -39,6 +39,18 @@ def evaluate(parcel, rules):
             applied.append(rule["action"])
             return (False, 0, applied)
 
+        if rule["action"].startswith("surcharge:"):
+            surcharge = rule["action"].removeprefix("surcharge: ")
+            try:
+                surcharge = int(surcharge)
+                total += surcharge
+            except ValueError:
+                print("Could not convert")
+                return
+
+        if matched:
+            applied.append(rule["name"])
+
     return (True, total, applied)
 
 for idx, parcel in enumerate(parcels, start=1):

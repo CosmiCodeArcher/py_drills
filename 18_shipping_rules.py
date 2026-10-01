@@ -36,19 +36,12 @@ def evaluate(parcel, rules):
             continue
 
         if rule["action"].startswith("reject:"):
-            applied.append(rule["action"])
-            return (False, 0, applied)
+            reason = rule["action"].removeprefix("reject: ")
+            return (False, 0, [reason])
 
         if rule["action"].startswith("surcharge:"):
             surcharge = rule["action"].removeprefix("surcharge: ")
-            try:
-                surcharge = int(surcharge)
-                total += surcharge
-            except ValueError:
-                print("Could not convert")
-                return
-
-        if matched:
+            total += int(surcharge)
             applied.append(rule["name"])
 
     return (True, total, applied)
@@ -56,18 +49,14 @@ def evaluate(parcel, rules):
 for idx, parcel in enumerate(parcels, start=1):
     accepted, total, applied = evaluate(parcel, rules)
 
-    if accepted:
-        accepted = "accepted"
-    else:
-        accepted = "rejected"
+    status = "accepted" if accepted else "rejected"
 
-    applied = ", ".join(applied)
+    applied_str = ", ".join(applied)
 
-    if applied == "":
-        applied = "no rules applied"
-    
-    if applied.startswith("reject:"):
-        applied = applied.removeprefix("reject: ")
-        print(f"{idx}. {parcel['id']} {accepted} - {applied}")
+    if not applied:
+        applied_str = "no rules applied"
+
+    if not accepted:
+        print(f"{idx}. {parcel['id']} {status} - {applied_str}")
     else:
-        print(f"{idx}. {parcel['id']} {accepted} - ₦{total} ({applied})")
+        print(f"{idx}. {parcel['id']} {status} - ₦{total} ({applied_str})")

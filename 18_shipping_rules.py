@@ -46,17 +46,25 @@ def evaluate(parcel, rules):
 
     return (True, total, applied)
 
+accepted_count = 0
+rejected_count = 0
+total_revenue = 0
+
+
 for idx, parcel in enumerate(parcels, start=1):
     accepted, total, applied = evaluate(parcel, rules)
-
     status = "accepted" if accepted else "rejected"
-
     applied_str = ", ".join(applied)
 
     if not applied:
         applied_str = "no rules applied"
 
     if not accepted:
+        rejected_count += 1
         print(f"{idx}. {parcel['id']} {status} - {applied_str}")
     else:
+        accepted_count += 1
+        total_revenue += total
         print(f"{idx}. {parcel['id']} {status} - ₦{total} ({applied_str})")
+
+print(f"Accepted: {accepted_count}, Rejected: {rejected_count}, Revenue: ₦{total_revenue}")

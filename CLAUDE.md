@@ -84,6 +84,29 @@ dicts incl. `{**d, "k": v}`; `sys.stderr`, `sys.exit()`; `input()`; `is` vs `==`
 - Don't rebind a name to a different type mid-function.
 - Partitions must sum to the whole (resolved + abandoned + unreached == len(queue)).
   Derive values from what you already track rather than maintaining extra counters.
+- Lambdas (16.1): best used as `key=` for `sorted`/`max`/`min`. Prefer a comprehension over
+  `map(lambda ...)`. Don't assign a lambda to a name (use `def`). Lambdas created in a loop
+  capture the variable, not its value at that moment (late binding).
+
+### Algorithms, data, and ML (10.3–10.5)
+- An algorithm must terminate and every step must be unambiguous.
+- Hidden inputs (clock, random, files, env vars) break determinism: pass them in as parameters.
+- Money as integer kobo or `decimal.Decimal`, never float. Dates as ISO 8601 (`YYYY-MM-DD`).
+- Phone/account numbers and IDs are text, not numbers (no arithmetic, leading zeros matter).
+- Missing value = `None`, not `0` or `""`. Normalise before deduplicating.
+- Dicts have no enforced schema: validate records at the boundary; `dict.get()` for optional keys.
+- Rule engines: state the conflict strategy (first match / all matching); always have a fallback.
+- Features = inputs known at prediction time; label = the answer. Category label →
+  classification; number → regression.
+- Leakage test for any feature: would I know this at the moment I make the prediction?
+- Model = a function whose parameters come from training. The learning algorithm finds the
+  parameters; inference calls the model only, never retrains.
+- Test data measures once, never chooses. Overfitting = fitting noise; more parameters means
+  more capacity to memorise. Training accuracy can't reveal it.
+- Model output (probability) and decision threshold are separate; people set the threshold
+  from the cost of each kind of mistake.
+- Rules fail loudly on unanticipated input; models answer anyway (monitor deployed models).
+- Never load an untrusted `.pkl` file: unpickling can execute code.
 
 ### AI concepts (10.2.x)
 - Rules when you can state them and must justify each decision; fitted models when you
@@ -104,10 +127,13 @@ dicts incl. `{**d, "k": v}`; `sys.stderr`, `sys.exit()`; `input()`; `is` vs `==`
 - Shadowing built-ins (`list`, `input`)
 - Bare `except:`
 - Overwriting a bool with display text, then testing it (truthy string)
+- Implementing only some conditions of a multi-condition rule (split into one check each)
+- Reusing one variable name for two results, so the second overwrites the first
+- Training on test data
 
 ## Not yet covered (Part 1 remaining)
-- Module 1 remainder: 10.3 (algorithms, programs & rules) onward
-- Module 2: 16.1 lambda (formal), 17.1 recursion
+- Module 1: complete
+- Module 2: 17.1 recursion
 - Module 3: built-in data structures
 - Module 4: object-oriented programming
 - Module 5: advanced data structures & algorithms

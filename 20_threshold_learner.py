@@ -10,11 +10,20 @@ training = [
     (0, "spam"),
     (7, "spam"),
 ]
-new_messages = [2, 9, 0, 3]
+# new_messages = [2, 9, 0, 3]
+test = [(2, "not_spam"), (8, "spam"), (1, "not_spam"), (3, "spam"), (5, "spam")]
 
 
 def predict(count, threshold):
     return "spam" if count >= threshold else "not_spam"
+
+
+def evaluate(examples, threshold):
+    amount = 0
+    for count, label in examples:
+        if predict(count, threshold) == label:
+            amount += 1
+    return amount
 
 
 def train(examples):
@@ -22,10 +31,7 @@ def train(examples):
     best_correct = -1
 
     for threshold in range(9):
-        correct = 0
-        for count, label in examples:
-            if predict(count, threshold) == label:
-                correct += 1
+        correct = evaluate(examples, threshold)
 
         if correct > best_correct:
             best_correct = correct
@@ -34,8 +40,10 @@ def train(examples):
     return (best_threshold, best_correct)
 
 
-threshold, score = train(training)
-print(threshold, score)
+threshold, train_score = train(training)
+test_score = evaluate(test, threshold)
+print(f"train: {train_score}/{len(training)}, test: {test_score}/{len(test)}")
+# print(threshold, score)
 
-for message in new_messages:
-    print(predict(message, threshold))
+# for message in new_messages:
+#     print(predict(message, threshold))
